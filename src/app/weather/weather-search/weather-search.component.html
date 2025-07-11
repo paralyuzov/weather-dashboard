@@ -1,0 +1,13 @@
+<div class="flex space-x-2 justify-center items-center mb-5">
+  <p-floatlabel variant="on">
+    <input
+      pInputText
+      id="on_label"
+      (input)="onInputChange($event)"
+      autocomplete="off"
+      #searchInput
+    />
+    <label for="on_label">Search by city</label>
+  </p-floatlabel>
+  <p-button (onClick)="onSearch(searchInput)" icon="pi pi-search"></p-button>
+</div>
