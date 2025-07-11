@@ -40,3 +40,17 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Environment variables and API keys
+.env
+.env.local
+.env.production
+.env.staging
+*.env
+
+# API keys and secrets
+src/environment/environment.prod.ts
+src/environment/environment.ts
+src/environment/enviroment.local.ts
+# Keep environment template files
+!src/environment/environment.example.ts

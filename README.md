@@ -2,6 +2,31 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.13.
 
+## Setup
+
+### 1. Install Dependencies
+```bash
+npm install
+```
+
+### 2. Environment Configuration
+1. Copy the example environment file:
+   ```bash
+   cp .env.example .env
+   ```
+2. Get your free API key from [OpenWeatherMap](https://openweathermap.org/api)
+3. Replace `your_api_key_here` in `.env` with your actual API key
+4. Update `src/environment/enviroment.ts` with your API key:
+   ```typescript
+   export const environment = {
+     production: false,
+     openWeatherApi: 'YOUR_API_KEY_HERE',
+     openWeatherBaseUrl: 'https://api.openweathermap.org/data/2.5',
+   };
+   ```
+
+**⚠️ Important:** Never commit your API key to version control. The environment file is already added to `.gitignore`.
+
 ## Development server
 
 To start a local development server, run:
