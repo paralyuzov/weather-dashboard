@@ -1,0 +1,29 @@
+<div class="w-full">
+  <div class="mb-10">
+    <h3 class="text-lg font-mono underline underline-offset-6 tracking-wide text-white mb-4">Favorites</h3>
+  </div>
+
+  <div class="space-y-3">
+    @for (city of favoritesCity$ | async; track city) {
+      <div class=" shadow-md shadow-slate-600  p-3 flex justify-between items-center hover:cursor-pointer hover:scale-105 hover:shadow-[#59C9AF]" (click)="loadCityWeather(city)">
+        <h4 class="text-sm font-medium ">{{ city }}</h4>
+        <p-button
+          icon="pi pi-trash"
+          severity="danger"
+          [text]="true"
+          size="small"
+          (onClick)="removeFavorite(city); $event.stopPropagation()"
+          pTooltip="Remove from favorites">
+        </p-button>
+      </div>
+    }
+  </div>
+
+  <!-- Empty State -->
+  @if ((favoritesCity$ | async)?.length === 0) {
+    <div class="text-center py-8">
+      <i class="pi pi-heart text-4xl text-gray-400 mb-2"></i>
+      <p class="text-sm text-gray-500">No favorites yet</p>
+    </div>
+  }
+</div>

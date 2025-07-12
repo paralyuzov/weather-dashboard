@@ -13,6 +13,9 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
 import { FormsModule } from '@angular/forms';
 import { TempratureConvertPipe } from '../../pipes/temprature-convert.pipe';
 import { Router } from '@angular/router';
+import { UserFavoritesComponent } from '../../favorites/user-favorites/user-favorites.component';
+import { TooltipModule } from 'primeng/tooltip';
+import { FavoritesService } from '../../favorites/favorites.service';
 
 @Component({
   selector: 'app-current-weather',
@@ -26,13 +29,16 @@ import { Router } from '@angular/router';
     ProgressSpinnerModule,
     ToggleSwitch,
     FormsModule,
-    TempratureConvertPipe
+    TempratureConvertPipe,
+    UserFavoritesComponent,
+    TooltipModule,
   ],
   templateUrl: './current-weather.component.html',
   styleUrl: './current-weather.component.css',
 })
 export class CurrentWeatherComponent implements OnInit, OnDestroy {
   weatherService = inject(WeatherService);
+  favoritesService = inject(FavoritesService);
   currentWeather$ = this.weatherService.currentWeather$;
   loading$ = this.weatherService.loading$;
   error$ = this.weatherService.error$;
@@ -48,7 +54,6 @@ export class CurrentWeatherComponent implements OnInit, OnDestroy {
   get temperatureUnit(): 'C' | 'F' {
     return this.switchTemp ? 'F' : 'C';
   }
-
 
   ngOnInit(): void {
     this.loadWeatherData();
@@ -77,12 +82,20 @@ export class CurrentWeatherComponent implements OnInit, OnDestroy {
     return new Date((dt + timezoneOffset) * 1000);
   }
 
-
   retry(): void {
     this.loadWeatherData();
   }
 
   viewForecast(city: string): void {
     this.router.navigate(['/forecast', city]);
+  }
+
+  addToFavorites(city: string): void {
+    const added = this.favoritesService.addToFavorites(city);
+    if (added) {
+      console.log(`${city} added to favorites.`);
+    } else {
+      console.warn(`${city} is already in favorites or could not be added.`);
+    }
   }
 }
