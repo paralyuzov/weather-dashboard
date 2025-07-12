@@ -8,4 +8,11 @@ export const routes: Routes = [
         (m) => m.CurrentWeatherComponent
       ),
   },
+  {
+    path: 'forecast/:city',
+    loadComponent: () =>
+      import('./forecast/forecast-city/forecast-city.component').then(
+        (m) => m.ForecastCityComponent
+      ),
+  }
 ];
