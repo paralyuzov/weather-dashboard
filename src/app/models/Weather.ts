@@ -16,19 +16,19 @@ export interface Weather {
   cod?: number; // HTTP status code
 }
 
-type Coordinates = {
+export type Coordinates = {
   lat: number;
   lon: number;
 };
 
-type WeatherInfo = {
+export type WeatherInfo = {
   id: number;
   main: string;
   description: string;
   icon: string;
 };
 
-type Main = {
+export type Main = {
   temp: number;
   feels_like: number;
   temp_min: number;
@@ -39,13 +39,13 @@ type Main = {
   grnd_level?: number;
 };
 
-type Wind = {
+export type Wind = {
   speed: number;
   deg?: number;
   gust?: number;
 };
 
-type Sys = {
+export type Sys = {
   type?: number;
   id?: number;
   country?: string;
