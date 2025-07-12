@@ -12,6 +12,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 import { FormsModule } from '@angular/forms';
 import { TempratureConvertPipe } from '../../pipes/temprature-convert.pipe';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-current-weather',
@@ -30,12 +31,13 @@ import { TempratureConvertPipe } from '../../pipes/temprature-convert.pipe';
   templateUrl: './current-weather.component.html',
   styleUrl: './current-weather.component.css',
 })
-export class CurrentWeatherComponent {
+export class CurrentWeatherComponent implements OnInit, OnDestroy {
   weatherService = inject(WeatherService);
   currentWeather$ = this.weatherService.currentWeather$;
   loading$ = this.weatherService.loading$;
   error$ = this.weatherService.error$;
   switchTemp: boolean = false;
+  router = inject(Router);
 
   private destroy$ = new Subject<void>();
 
@@ -78,5 +80,9 @@ export class CurrentWeatherComponent {
 
   retry(): void {
     this.loadWeatherData();
+  }
+
+  viewForecast(city: string): void {
+    this.router.navigate(['/forecast', city]);
   }
 }
