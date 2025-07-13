@@ -5,10 +5,11 @@ import { TooltipModule } from 'primeng/tooltip';
 import { FavoritesService } from '../favorites.service';
 import { AsyncPipe } from '@angular/common';
 import { WeatherService } from '../../weather/weather.service';
+import { UpperCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-user-favorites',
-  imports: [CardModule, Button, TooltipModule, AsyncPipe],
+  imports: [CardModule, Button, TooltipModule, AsyncPipe, UpperCasePipe],
   templateUrl: './user-favorites.component.html',
   styleUrl: './user-favorites.component.css',
 })
