@@ -3,6 +3,7 @@ import { ConfigService } from '../services/config.service';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, reduce } from 'rxjs';
 import { ForecastResponse, GroupedForecastByDay } from '../models/Forecast';
+import { ToastService } from '../toast/toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,14 +13,18 @@ export class ForecastService {
   private http = inject(HttpClient);
   private api = this.configService.openWeatherBaseUrl;
   private apiKey = this.configService.openWeatherApi;
+  private toastService = inject(ToastService);
 
-  private currentForeCastSubject = new BehaviorSubject<ForecastResponse | null>(null);
+  private currentForeCastSubject = new BehaviorSubject<ForecastResponse | null>(
+    null
+  );
   currentForecast$ = this.currentForeCastSubject.asObservable();
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
   private errorSubject = new BehaviorSubject<string | null>(null);
   error$ = this.errorSubject.asObservable();
-  private groupedForecastSubject = new BehaviorSubject<GroupedForecastByDay | null>(null);
+  private groupedForecastSubject =
+    new BehaviorSubject<GroupedForecastByDay | null>(null);
   groupedForecast$ = this.groupedForecastSubject.asObservable();
 
   constructor() {}
@@ -30,7 +35,9 @@ export class ForecastService {
     );
   }
 
-  private groupForecastByDay(forecast: ForecastResponse): Record<string, any[]> {
+  private groupForecastByDay(
+    forecast: ForecastResponse
+  ): Record<string, any[]> {
     return forecast.list.reduce((acc, item) => {
       const date = new Date(item.dt * 1000);
       const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
@@ -52,9 +59,10 @@ export class ForecastService {
         this.currentForeCastSubject.next(response);
         const groupedForecast = this.groupForecastByDay(response);
         this.groupedForecastSubject.next(groupedForecast);
-        console.log('Forecast grouped by day:', groupedForecast);
-        console.log('Forecast loaded:', response);
         this.loadingSubject.next(false);
+        this.toastService.showSuccess(
+          `Forecast for ${city} loaded successfully!`
+        );
       },
       error: (error) => {
         this.errorSubject.next(error);
