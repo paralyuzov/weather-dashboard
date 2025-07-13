@@ -4,6 +4,7 @@ import { ConfigService } from '../services/config.service';
 import { GeolocationCoord, Weather } from '../models/Weather';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { switchMap, catchError, finalize, tap } from 'rxjs/operators';
+import { ToastService } from '../toast/toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,7 @@ export class WeatherService {
   private configService = inject(ConfigService);
   private api = this.configService.openWeatherBaseUrl;
   private apiKey = this.configService.openWeatherApi;
+  private toastService = inject(ToastService);
 
   private currentWeatherSubject = new BehaviorSubject<Weather | null>(null);
   private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -30,12 +32,14 @@ export class WeatherService {
       switchMap(coords => this.getCurrentWeather(coords.latitude, coords.longitude)),
       tap(weather => {
         this.currentWeatherSubject.next(weather);
+        this.toastService.showSuccess('Weather loaded successfully!');
       }),
       finalize(() => {
         this.loadingSubject.next(false);
       }),
       catchError(error => {
         this.errorSubject.next(error);
+        this.toastService.showError(error);
         return throwError(() => error);
       })
     );
@@ -93,7 +97,8 @@ export class WeatherService {
   return this.http.get<Weather>(url).pipe(
     tap(weather => {
       this.currentWeatherSubject.next(weather);
-      this.errorSubject.next(null); // Clear any previous errors
+      this.errorSubject.next(null);
+      this.toastService.showSuccess(`Weather for ${city} loaded successfully!`);
     }),
     finalize(() => {
       this.loadingSubject.next(false);
@@ -110,7 +115,8 @@ export class WeatherService {
       }
 
       this.errorSubject.next(errorMessage);
-      this.currentWeatherSubject.next(null); // Clear current weather
+      this.currentWeatherSubject.next(null);
+      this.toastService.showError(errorMessage);
 
       return of(null);
     })
